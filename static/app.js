@@ -4,30 +4,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const emaWall = document.getElementById('ema-wall');
   const emaForm = document.getElementById('ema-form');
 
-  // Placeholder data
-  const placeholderEmas = [
-    {
-      id: 1,
-      name: 'gurt',
-      message: 'sybau',
-      type: 'wish',
-      created_at: '2024-06-01T10:00:00Z',
-    },
-    {
-      id: 2,
-      name: 'yo',
-      message: 'presh',
-      type: 'thanks',
-      created_at: '2024-06-02T14:30:00Z',
-    },
-    {
-      id: 3,
-      name: 'gurt',
-      message: 'yo',
-      type: 'prayer',
-      created_at: '2024-06-03T08:15:00Z',
-    },
-  ];
+  // API base URL
+  const API_BASE = '/api/emas/';
+
+  // Fetch emas from backend
+  async function fetchEmas() {
+    try {
+      const response = await fetch(`${API_BASE}?skip=0&limit=50`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const emas = await response.json();
+      return emas;
+    } catch (error) {
+      console.error('Error fetching emas:', error);
+      return [];
+    }
+  }
+
+  // Submit new ema to backend
+  async function submitEma(emaData) {
+    try {
+      const response = await fetch(API_BASE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emaData),
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Submission failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText,
+          sentData: emaData
+        });
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const newEma = await response.json();
+      return newEma;
+    } catch (error) {
+      console.error('Error submitting ema:', error);
+      throw error;
+    }
+  }
 
   // Render ema cards
   function renderEmas(emas) {
@@ -52,19 +73,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Form submission (sidebar)
-  emaForm.addEventListener('submit', (e) => {
+  emaForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(emaForm);
-    const newEma = {
-      id: Date.now(),
-      name: formData.get('name').trim(),
+    const emaData = {
+      name: formData.get('name').trim() || null,
       message: formData.get('message').trim(),
-      type: formData.get('type'),
-      created_at: new Date().toISOString(),
+      type: formData.get('type') || null,
     };
-    placeholderEmas.unshift(newEma);
-    renderEmas(placeholderEmas);
-    emaForm.reset();
+
+    try {
+      // Submit to backend
+      await submitEma(emaData);
+      
+      // Refresh the ema wall
+      const emas = await fetchEmas();
+      renderEmas(emas);
+      
+      // Reset form
+      emaForm.reset();
+    } catch (error) {
+      console.error('Failed to submit ema:', error);
+      alert('Failed to submit your wish. Please try again.');
+    }
   });
 
   // Helpers
@@ -81,6 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
   }
 
-  // Initial render
-  renderEmas(placeholderEmas);
+  // Initial load
+  async function initializeApp() {
+    const emas = await fetchEmas();
+    renderEmas(emas);
+  }
+
+  initializeApp();
 });
