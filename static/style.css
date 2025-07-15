@@ -1,0 +1,162 @@
+body {
+  margin: 0;
+  font-family: 'Lora', serif;
+  background: #f7f6f2;
+  color: #222;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 2rem 1rem 1rem 1rem;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.2em;
+  letter-spacing: 0.03em;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 1.1rem;
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem 1rem;
+}
+
+main {
+  flex: 2 1 0;
+}
+
+#ema-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+  width: 100%;
+  margin: 2rem 0 1.5rem 0;
+}
+
+.ema-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 1.2rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+  transition: box-shadow 0.2s;
+}
+.ema-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+}
+.ema-message {
+  font-size: 1.08rem;
+  margin-bottom: 0.7em;
+  word-break: break-word;
+}
+.ema-meta {
+  font-size: 0.92rem;
+  color: #aaa;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#ema-sidebar {
+  flex: 1 1 320px;
+  max-width: 340px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  padding: 2rem 1.2rem 1.2rem 1.2rem;
+  margin-top: 2.5rem;
+  position: sticky;
+  top: 2.5rem;
+  align-self: flex-start;
+  min-width: 0;
+}
+#ema-sidebar h2 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1.2em;
+}
+
+#ema-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+}
+#ema-form label {
+  font-size: 1rem;
+  color: #555;
+  font-weight: 400;
+}
+#ema-form input,
+#ema-form textarea,
+#ema-form select {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  padding: 0.5em;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #faf9f6;
+  resize: none;
+}
+#ema-form textarea {
+  min-height: 70px;
+  max-height: 180px;
+}
+#ema-form button[type="submit"] {
+  background: #e6b422;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 0.6em 1.5em;
+  font-size: 1.05rem;
+  margin-top: 0.5em;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background 0.2s;
+  font-family: 'Lora', serif;
+}
+#ema-form button[type="submit"]:hover {
+  background: #cfa10d;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 0.5rem 2rem 0.5rem;
+  }
+  #ema-sidebar {
+    max-width: 100%;
+    width: 100%;
+    position: static;
+    margin-top: 0;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+}
+
+@media (max-width: 600px) {
+  #ema-wall {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+  #ema-sidebar {
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+  }
+}

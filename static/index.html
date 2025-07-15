@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Ema</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Digital Ema</h1>
+    <p class="subtitle">Share your wish. Read others'. Inspired by Japanese ema plaques.</p>
+  </header>
+  <div class="layout">
+    <main>
+      <section id="ema-wall" aria-label="Ema Wall">
+        <!-- Ema messages will be inserted here by JS -->
+      </section>
+    </main>
+    <aside id="ema-sidebar">
+      <h2>Add Your Ema</h2>
+      <form id="ema-form">
+        <label for="name">Name (optional):</label>
+        <input type="text" id="name" name="name" maxlength="32">
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required maxlength="280" placeholder="Write your wish or message..."></textarea>
+        <label for="type">Type (optional):</label>
+        <select id="type" name="type">
+          <option value="">-- Select --</option>
+          <option value="wish">Wish</option>
+          <option value="prayer">Prayer</option>
+          <option value="thanks">Thanks</option>
+        </select>
+        <button type="submit">Send</button>
+      </form>
+    </aside>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
