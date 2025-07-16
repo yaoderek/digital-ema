@@ -7,18 +7,60 @@ document.addEventListener('DOMContentLoaded', () => {
   // API base URL
   const API_BASE = '/api/emas/';
 
-  // Fetch emas from backend
+  let emas = [];
+  let lastMessageCount = 0;
+  let autoRefreshInterval = null;
+
+  // Fetch emas from backend with real-time detection
   async function fetchEmas() {
     try {
       const response = await fetch(`${API_BASE}?skip=0&limit=50`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const emas = await response.json();
-      return emas;
+      const data = await response.json();
+      
+      // Check if we have new messages
+      if (data.length !== lastMessageCount) {
+        const newMessageCount = data.length - lastMessageCount;
+        emas = data;
+        lastMessageCount = data.length;
+        renderEmas(emas);
+        console.log(`🔄 Auto-refresh: Found ${newMessageCount} new message(s). Total: ${emas.length}`);
+      } else {
+        console.log(`🔄 Auto-refresh: No new messages (${emas.length} total)`);
+      }
+      
+      return data;
     } catch (error) {
       console.error('Error fetching emas:', error);
       return [];
+    }
+  }
+
+  function startAutoRefresh() {
+    // Stop any existing interval
+    if (autoRefreshInterval) {
+      clearInterval(autoRefreshInterval);
+    }
+    
+    // Start polling every 3 seconds
+    autoRefreshInterval = setInterval(async () => {
+      try {
+        await fetchEmas();
+      } catch (error) {
+        console.error('Auto-refresh error:', error);
+      }
+    }, 3000);
+    
+    console.log('🚀 Auto-refresh started (3 second intervals)');
+  }
+
+  function stopAutoRefresh() {
+    if (autoRefreshInterval) {
+      clearInterval(autoRefreshInterval);
+      autoRefreshInterval = null;
+      console.log('⏹️ Auto-refresh stopped');
     }
   }
 
@@ -54,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const newEma = await response.json();
+      
+      // Immediately refresh to show the new message
+      await fetchEmas();
+      
       return newEma;
     } catch (error) {
       console.error('Error submitting ema:', error);
@@ -97,10 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // Submit to backend
       await submitEma(emaData);
       
-      // Refresh the ema wall
-      const emas = await fetchEmas();
-      renderEmas(emas);
-      
       // Reset form
       emaForm.reset();
     } catch (error) {
@@ -125,9 +167,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial load
   async function initializeApp() {
+    console.log('📱 Initializing Digital Ema app...');
     const emas = await fetchEmas();
     renderEmas(emas);
+    startAutoRefresh(); // Start real-time updates
+    console.log('✅ App initialized with auto-refresh enabled');
   }
 
   initializeApp();
+});
+
+// Clean up when page is unloaded
+window.addEventListener('beforeunload', () => {
+  // This will be called when the page is closed or refreshed
+  // The autoRefreshInterval will be automatically cleared
 });
