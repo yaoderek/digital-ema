@@ -40,6 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
           errorText,
           sentData: emaData
         });
+        
+        // Handle content filtering errors
+        if (response.status === 400) {
+          try {
+            const errorData = JSON.parse(errorText);
+            throw new Error(errorData.detail || 'Message contains inappropriate content');
+          } catch (e) {
+            throw new Error('Message contains inappropriate content');
+          }
+        }
+        
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const newEma = await response.json();

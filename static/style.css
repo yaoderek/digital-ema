@@ -4,6 +4,11 @@ body {
   background: #f7f6f2;
   color: #222;
   min-height: 100vh;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Ema_Kasuga-taisha_Nara_07bs3200.jpg/320px-Ema_Kasuga-taisha_Nara_07bs3200.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 header {
